@@ -1,0 +1,43 @@
+# 1. Critical Folders
+# ---------------------------
+# Never commit trained models, data, or environments
+trained_models/
+data/*
+env/
+t15_pretrained_rnn_baseline/
+language_model/runtime/server/x86/kaldi/
+language_model/runtime/server/x86/kaldi
+
+# 2. Python & Jupyter
+# ---------------------------
+# Ignore all pycache folders
+__pycache__/
+
+# Ignore Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# 3. Cloned Repos
+# ---------------------------
+nejm-brain-to-text/
+
+# 4. Results & Logs
+# ---------------------------
+*.log
+*.pkl
+*.csv
+
+# 5. IDE & OS Files
+# ---------------------------
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# 6. Environment Files
+# ---------------------------
+*.env
+.env
+
+
+# Exceptions 
+!data/t15_copyTaskData_description.csv
