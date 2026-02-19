@@ -1,8 +1,8 @@
 #!/bin/bash
 #SBATCH -N 1
 #SBATCH --job-name=install_env
-#SBATCH --output=install_log_%j.out
-#SBATCH --error=install_log_%j.err
+#SBATCH --output=logs/install_log_%j.out
+#SBATCH --error=logs/install_log_%j.err
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=8
 #SBATCH --mem=64G
