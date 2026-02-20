@@ -188,3 +188,4 @@ def main():
 if __name__ == "__main__":
     main()
     print("\n--- Evaluation Finished ---")
+    print("NOTE: Redis was skipped. Word Error Rate (WER) and submission CSV were not calculated.")
