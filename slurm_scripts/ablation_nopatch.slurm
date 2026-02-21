@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=nopatch
-#SBATCH --output=logs/nopatch_2.out
-#SBATCH --error=logs/nopatch_2.err
+#SBATCH --output=logs/nopatch_3.out
+#SBATCH --error=logs/nopatch_3.err
 #SBATCH -N 1
 #SBATCH -n 1
 #SBATCH --cpus-per-task=8

@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=nodropout
-#SBATCH --output=logs/nodropout_2.out
-#SBATCH --error=logs/nodropout_2.err
+#SBATCH --output=logs/nodropout_3.out
+#SBATCH --error=logs/nodropout_3.err
 #SBATCH -N 1
 #SBATCH -n 1
 #SBATCH --cpus-per-task=8
