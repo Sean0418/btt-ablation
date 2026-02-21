@@ -17,6 +17,6 @@ mkdir -p logs
 
 echo "Starting No Patch Ablation Study"
 
-./env/bin/python train_model.py rnn_args_nopatch.yaml
+./env/bin/python ablation/train_model.py ablation/rnn_args_nopatch.yaml
 
 echo "Job Complete."

@@ -17,6 +17,6 @@ mkdir -p logs
 
 echo "Starting No Dropout Ablation Study"
 
-./env/bin/python train_model.py rnn_args_nodropout.yaml
+./env/bin/python ablation/train_model.py ablation/rnn_args_nodropout.yaml
 
 echo "Job Complete."
