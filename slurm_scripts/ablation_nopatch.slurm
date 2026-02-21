@@ -5,11 +5,11 @@
 #SBATCH -N 1
 #SBATCH -n 1
 #SBATCH --cpus-per-task=8
-#SBATCH --mem=64G
-#SBATCH --partition=l40-gpu
+#SBATCH --mem=32G
+#SBATCH --partition=volta-gpu
 #SBATCH --qos=gpu_access
 #SBATCH --gres=gpu:1
-#SBATCH --time=8:00:00
+#SBATCH --time=10:00:00
 
 cd $SLURM_SUBMIT_DIR
 
