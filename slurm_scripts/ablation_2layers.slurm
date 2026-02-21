@@ -17,6 +17,6 @@ mkdir -p logs
 
 echo "Starting 2Layer Ablation Study"
 
-./env/bin/python ablation/train_model.py ablation/rnn_args_2layer.yaml
+./env/bin/python ablation/train_model.py ablation/rnn_args_2layers.yaml
 
 echo "Job Complete."
