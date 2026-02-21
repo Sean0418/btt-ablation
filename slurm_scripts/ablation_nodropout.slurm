@@ -9,7 +9,7 @@
 #SBATCH --partition=volta-gpu
 #SBATCH --qos=gpu_access
 #SBATCH --gres=gpu:1
-#SBATCH --time=10:00:00
+#SBATCH --time=4:00:00
 
 cd $SLURM_SUBMIT_DIR
 
