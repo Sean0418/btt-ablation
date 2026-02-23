@@ -142,6 +142,8 @@ class BrainToTextDecoder_Trainer:
             n_layers=self.args["model"]["n_layers"],
             patch_size=self.args["model"]["patch_size"],
             patch_stride=self.args["model"]["patch_stride"],
+            use_day_alignment=self.args["model"].get("use_day_alignment", True),
+            bidirectional=self.args["model"].get("bidirectional", False)
         )
 
         # Call torch.compile to speed up training

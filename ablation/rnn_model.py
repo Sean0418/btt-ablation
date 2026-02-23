@@ -17,6 +17,8 @@ class GRUDecoder(nn.Module):
                  n_layers = 5, 
                  patch_size = 0,
                  patch_stride = 0,
+                 use_day_alignment = True, 
+                 bidirectional = False
                  ):
         '''
         neural_dim  (int)      - number of channels in a single timestep (e.g. 512)
@@ -28,6 +30,8 @@ class GRUDecoder(nn.Module):
         n_layers    (int)      - number of recurrent layers 
         patch_size  (int)      - the number of timesteps to concat on initial input layer - a value of 0 will disable this "input concat" step 
         patch_stride(int)      - the number of timesteps to stride over when concatenating initial input 
+        use_day_alignment (bool)     - whether to use day-specific input layers to try to align neural data from different days to the same latent space. If False, then day-specific layers will be bypassed and the model will just learn a single shared input layer.
+        bidirectional (bool)  - whether to use a bidirectional RNN architecture. If True, then the model will have separate forward and backward GRU layers and the output of the forward and backward layers will be concatenated before being passed to the output layer. If False, then the model will just have a single unidirectional GRU layer.
         '''
         super(GRUDecoder, self).__init__()
         
@@ -47,12 +51,16 @@ class GRUDecoder(nn.Module):
         self.day_layer_activation = nn.Softsign() # basically a shallower tanh 
 
         # Set weights for day layers to be identity matrices so the model can learn its own day-specific transformations
-        self.day_weights = nn.ParameterList(
-            [nn.Parameter(torch.eye(self.neural_dim)) for _ in range(self.n_days)]
-        )
-        self.day_biases = nn.ParameterList(
-            [nn.Parameter(torch.zeros(1, self.neural_dim)) for _ in range(self.n_days)]
-        )
+        
+        self.use_day_alignment = use_day_alignment
+        
+        if self.use_day_alignment:
+            self.day_weights = nn.ParameterList(
+                [nn.Parameter(torch.eye(self.neural_dim)) for _ in range(self.n_days)]
+            )
+            self.day_biases = nn.ParameterList(
+                [nn.Parameter(torch.zeros(1, self.neural_dim)) for _ in range(self.n_days)]
+            )
 
         self.day_layer_dropout = nn.Dropout(input_dropout)
         
@@ -68,18 +76,23 @@ class GRUDecoder(nn.Module):
             num_layers = self.n_layers,
             dropout = self.rnn_dropout, 
             batch_first = True, # The first dim of our input is the batch dim
-            bidirectional = False,
+            bidirectional = self.bidirectional,
         )
-
+        
+        # Calculate the proper output dimension for the prediction head
+        
         # Set recurrent units to have orthogonal param init and input layers to have xavier init
         for name, param in self.gru.named_parameters():
             if "weight_hh" in name:
                 nn.init.orthogonal_(param)
             if "weight_ih" in name:
                 nn.init.xavier_uniform_(param)
+        
+        self.num_directions = 2 if self.bidirectional else 1
+        gru_output_dim = self.n_units * self.num_directions
 
         # Prediciton head. Weight init to xavier
-        self.out = nn.Linear(self.n_units, self.n_classes)
+        self.out = nn.Linear(gru_output_dim, self.n_classes)
         nn.init.xavier_uniform_(self.out.weight)
 
         # Learnable initial hidden states
@@ -92,11 +105,13 @@ class GRUDecoder(nn.Module):
         '''
 
         # Apply day-specific layer to (hopefully) project neural data from the different days to the same latent space
-        day_weights = torch.stack([self.day_weights[i] for i in day_idx], dim=0)
-        day_biases = torch.cat([self.day_biases[i] for i in day_idx], dim=0).unsqueeze(1)
+        
+        if self.use_day_alignment:
+            day_weights = torch.stack([self.day_weights[i] for i in day_idx], dim=0)
+            day_biases = torch.cat([self.day_biases[i] for i in day_idx], dim=0).unsqueeze(1)
 
-        x = torch.einsum("btd,bdk->btk", x, day_weights) + day_biases
-        x = self.day_layer_activation(x)
+            x = torch.einsum("btd,bdk->btk", x, day_weights) + day_biases
+            x = self.day_layer_activation(x)
 
         # Apply dropout to the ouput of the day specific layer
         if self.input_dropout > 0:
