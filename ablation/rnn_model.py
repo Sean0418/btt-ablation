@@ -53,7 +53,8 @@ class GRUDecoder(nn.Module):
         # Set weights for day layers to be identity matrices so the model can learn its own day-specific transformations
         
         self.use_day_alignment = use_day_alignment
-        
+        self.bidirectional = bidirectional
+
         if self.use_day_alignment:
             self.day_weights = nn.ParameterList(
                 [nn.Parameter(torch.eye(self.neural_dim)) for _ in range(self.n_days)]
