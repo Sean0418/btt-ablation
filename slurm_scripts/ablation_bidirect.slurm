@@ -5,11 +5,11 @@
 #SBATCH -N 1
 #SBATCH -n 1
 #SBATCH --cpus-per-task=8
-#SBATCH --mem=32G
-#SBATCH --partition=volta-gpu
+#SBATCH --mem=48G
+#SBATCH --partition=l40-gpu
 #SBATCH --qos=gpu_access
 #SBATCH --gres=gpu:1
-#SBATCH --time=4:00:00
+#SBATCH --time=01:00:00
 #SBATCH --mail-type=begin,end,fail
 #SBATCH --mail-user=sjshen@email.unc.edu
 
