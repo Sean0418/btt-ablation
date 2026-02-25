@@ -136,7 +136,7 @@ class GRUDecoder(nn.Module):
         
         # Determine initial hidden states
         if states is None:
-            states = self.h0.expand(self.n_layers, x.shape[0], self.n_units).contiguous()
+            states = self.h0.expand(self.n_layers * self.num_directions, x.shape[0], self.n_units).contiguous()
 
         # Pass input through RNN 
         output, hidden_states = self.gru(x, states)
