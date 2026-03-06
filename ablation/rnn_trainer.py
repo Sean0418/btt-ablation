@@ -131,27 +131,11 @@ class BrainToTextDecoder_Trainer:
             random.seed(self.args["seed"])
             torch.manual_seed(self.args["seed"])
 
-        # Create datasets and dataloaders
-        # Filter sessions to only include those with both train and val files
-        valid_sessions = []
-        for s in self.args["dataset"]["sessions"]:
-            train_path = os.path.join(self.args["dataset"]["dataset_dir"], s, "data_train.hdf5")
-            val_path = os.path.join(self.args["dataset"]["dataset_dir"], s, "data_val.hdf5")
-            if os.path.exists(train_path) and os.path.exists(val_path):
-                valid_sessions.append(s)
-            else:
-                self.logger.warning(f"Skipping session {s}: missing data_train.hdf5 or data_val.hdf5")
-        
-        if len(valid_sessions) == 0:
-            raise ValueError("No valid sessions found with both data_train.hdf5 and data_val.hdf5 files")
-        
-        self.logger.info(f"Using {len(valid_sessions)} sessions for training (out of {len(self.args['dataset']['sessions'])} specified)")
-
-        # Initialize the model with the correct number of days
+        # Initialize the model
         self.model = GRUDecoder(
             neural_dim=self.args["model"]["n_input_features"],
             n_units=self.args["model"]["n_units"],
-            n_days=len(valid_sessions),
+            n_days=len(self.args["dataset"]["sessions"]),
             n_classes=self.args["dataset"]["n_classes"],
             rnn_dropout=self.args["model"]["rnn_dropout"],
             input_dropout=self.args["model"]["input_network"]["input_layer_dropout"],
@@ -184,13 +168,14 @@ class BrainToTextDecoder_Trainer:
             f"Model has {day_params:,} day-specific parameters | {((day_params / total_params) * 100):.2f}% of total parameters"
         )
 
+        # Create datasets and dataloaders
         train_file_paths = [
             os.path.join(self.args["dataset"]["dataset_dir"], s, "data_train.hdf5")
-            for s in valid_sessions
+            for s in self.args["dataset"]["sessions"]
         ]
         val_file_paths = [
             os.path.join(self.args["dataset"]["dataset_dir"], s, "data_val.hdf5")
-            for s in valid_sessions
+            for s in self.args["dataset"]["sessions"]
         ]
 
         # Ensure that there are no duplicate days
