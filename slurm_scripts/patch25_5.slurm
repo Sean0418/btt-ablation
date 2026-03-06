@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=patch25_5
-#SBATCH --output=logs/patch25_5.out
-#SBATCH --error=logs/patch25_5.err
+#SBATCH --output=logs/patch25_5#1.out
+#SBATCH --error=logs/patch25_5#1.err
 #SBATCH -N 1
 #SBATCH -n 1
 #SBATCH --cpus-per-task=8
