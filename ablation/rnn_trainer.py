@@ -144,6 +144,7 @@ class BrainToTextDecoder_Trainer:
             patch_stride=self.args["model"]["patch_stride"],
             use_day_alignment=self.args["model"].get("use_day_alignment", True),
             bidirectional=self.args["model"].get("bidirectional", False)
+            pad_remainder=self.args["model"].get("pad_remainder", False)
         )
 
         # Call torch.compile to speed up training
@@ -593,11 +594,17 @@ class BrainToTextDecoder_Trainer:
                     features, n_time_steps, "train"
                 )
 
-                adjusted_lens = (
-                    (n_time_steps - self.args["model"]["patch_size"])
-                    / self.args["model"]["patch_stride"]
-                    + 1
-                ).to(torch.int32)
+                if self.args["model"].get("pad_remainder", False):
+                    # Calculate the new length accounting for the added zeros
+                    float_lens = (n_time_steps - self.args["model"]["patch_size"]) / self.args["model"]["patch_stride"]
+                    adjusted_lens = (torch.ceil(torch.clamp(float_lens, min=0.0)) + 1).to(torch.int32)
+                else:
+                    # Execute the original baseline calculation
+                    adjusted_lens = (
+                        (n_time_steps - self.args["model"]["patch_size"])
+                        / self.args["model"]["patch_stride"]
+                        + 1
+                    ).to(torch.int32)
 
                 # Get phoneme predictions
                 logits = self.model(features, day_indicies)

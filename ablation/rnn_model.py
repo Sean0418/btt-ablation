@@ -19,6 +19,7 @@ class GRUDecoder(nn.Module):
                  patch_stride = 0,
                  use_day_alignment = True, 
                  bidirectional = False
+                 pad_remainder = False
                  ):
         '''
         neural_dim  (int)      - number of channels in a single timestep (e.g. 512)
@@ -32,6 +33,7 @@ class GRUDecoder(nn.Module):
         patch_stride(int)      - the number of timesteps to stride over when concatenating initial input 
         use_day_alignment (bool)     - whether to use day-specific input layers to try to align neural data from different days to the same latent space. If False, then day-specific layers will be bypassed and the model will just learn a single shared input layer.
         bidirectional (bool)  - whether to use a bidirectional RNN architecture. If True, then the model will have separate forward and backward GRU layers and the output of the forward and backward layers will be concatenated before being passed to the output layer. If False, then the model will just have a single unidirectional GRU layer.
+        pad_remainder (bool) - whether to pad the remainder of the sequence when using strided inputs.
         '''
         super(GRUDecoder, self).__init__()
         
@@ -46,6 +48,7 @@ class GRUDecoder(nn.Module):
         
         self.patch_size = patch_size
         self.patch_stride = patch_stride
+        self.pad_remainder = pad_remainder
 
         # Parameters for the day-specific input layers
         self.day_layer_activation = nn.Softsign() # basically a shallower tanh 
@@ -67,6 +70,23 @@ class GRUDecoder(nn.Module):
         
         self.input_size = self.neural_dim
 
+        if self.pad_remainder and self.patch_size > 0:
+            seq_len = x.size(1)
+            
+            # If the recording is shorter than a single patch
+            if seq_len < self.patch_size:
+                pad_len = self.patch_size - seq_len
+            # If the recording is longer, calculate the missing remainder
+            else:
+                remainder = (seq_len - self.patch_size) % self.patch_stride
+                if remainder > 0:
+                    pad_len = self.patch_stride - remainder
+                else:
+                    pad_len = 0
+            
+            # Apply zero padding to the end of the temporal dimension
+            if pad_len > 0:
+                x = torch.nn.functional.pad(x, (0, 0, 0, pad_len), "constant", 0)
         # If we are using "strided inputs", then the input size of the first recurrent layer will actually be in_size * patch_size
         if self.patch_size > 0:
             self.input_size *= self.patch_size

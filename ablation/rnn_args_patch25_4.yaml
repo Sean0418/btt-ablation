@@ -5,7 +5,7 @@ model:
   rnn_trainable: true # whether the GRU layers are trainable
   n_layers: 5 # number of GRU layers
   patch_size: 25 # size of the input patches (25 time steps)
-  patch_stride: 5 # stride for the input patches (5 time steps)
+  patch_stride: 4 # stride for the input patches (4 time steps)
 
   input_network:
     n_input_layers: 1 # number of input layers per network (one network for each day)

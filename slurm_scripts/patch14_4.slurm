@@ -1,7 +1,7 @@
 #!/bin/bash
-#SBATCH --job-name=patch14_4
-#SBATCH --output=logs/patch14_4_1.out
-#SBATCH --error=logs/patch14_4_1.err
+#SBATCH --job-name=patch14_4_padded
+#SBATCH --output=logs/patch14_4_padded.out
+#SBATCH --error=logs/patch14_4_padded.err
 #SBATCH -N 1
 #SBATCH -n 1
 #SBATCH --cpus-per-task=8
@@ -17,7 +17,7 @@ cd $SLURM_SUBMIT_DIR
 
 mkdir -p logs
 
-echo "Starting Patch14_4 Ablation Study"
+echo "Starting Patch14_4 Padded Ablation Study"
 
 ./env/bin/python ablation/train_model.py ablation/rnn_args_patch14_4.yaml
 
