@@ -143,7 +143,7 @@ class BrainToTextDecoder_Trainer:
             patch_size=self.args["model"]["patch_size"],
             patch_stride=self.args["model"]["patch_stride"],
             use_day_alignment=self.args["model"].get("use_day_alignment", True),
-            bidirectional=self.args["model"].get("bidirectional", False)
+            bidirectional=self.args["model"].get("bidirectional", False),
             pad_remainder=self.args["model"].get("pad_remainder", False)
         )
 

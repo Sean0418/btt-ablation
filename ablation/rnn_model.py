@@ -18,7 +18,7 @@ class GRUDecoder(nn.Module):
                  patch_size = 0,
                  patch_stride = 0,
                  use_day_alignment = True, 
-                 bidirectional = False
+                 bidirectional = False,
                  pad_remainder = False
                  ):
         '''
