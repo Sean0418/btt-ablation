@@ -70,23 +70,7 @@ class GRUDecoder(nn.Module):
         
         self.input_size = self.neural_dim
 
-        if self.pad_remainder and self.patch_size > 0:
-            seq_len = x.size(1)
-            
-            # If the recording is shorter than a single patch
-            if seq_len < self.patch_size:
-                pad_len = self.patch_size - seq_len
-            # If the recording is longer, calculate the missing remainder
-            else:
-                remainder = (seq_len - self.patch_size) % self.patch_stride
-                if remainder > 0:
-                    pad_len = self.patch_stride - remainder
-                else:
-                    pad_len = 0
-            
-            # Apply zero padding to the end of the temporal dimension
-            if pad_len > 0:
-                x = torch.nn.functional.pad(x, (0, 0, 0, pad_len), "constant", 0)
+        
         # If we are using "strided inputs", then the input size of the first recurrent layer will actually be in_size * patch_size
         if self.patch_size > 0:
             self.input_size *= self.patch_size
@@ -137,6 +121,24 @@ class GRUDecoder(nn.Module):
         # Apply dropout to the ouput of the day specific layer
         if self.input_dropout > 0:
             x = self.day_layer_dropout(x)
+            
+        if self.pad_remainder and self.patch_size > 0:
+            seq_len = x.size(1)
+            
+            # If the recording is shorter than a single patch
+            if seq_len < self.patch_size:
+                pad_len = self.patch_size - seq_len
+            # If the recording is longer, calculate the missing remainder
+            else:
+                remainder = (seq_len - self.patch_size) % self.patch_stride
+                if remainder > 0:
+                    pad_len = self.patch_stride - remainder
+                else:
+                    pad_len = 0
+            
+            # Apply zero padding to the end of the temporal dimension
+            if pad_len > 0:
+                x = torch.nn.functional.pad(x, (0, 0, 0, pad_len), "constant", 0)
 
         # (Optionally) Perform input concat operation
         if self.patch_size > 0: 
