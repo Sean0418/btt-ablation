@@ -1,7 +1,7 @@
 #!/bin/bash
-#SBATCH --job-name=wnoise_1
-#SBATCH --output=logs/wnoise_1.out
-#SBATCH --error=logs/wnoise_1.err
+#SBATCH --job-name=patch10_4
+#SBATCH --output=logs/patch10_4_1.out
+#SBATCH --error=logs/patch10_4_1.err
 #SBATCH -N 1
 #SBATCH -n 1
 #SBATCH --cpus-per-task=8
@@ -9,7 +9,7 @@
 #SBATCH --partition=volta-gpu
 #SBATCH --qos=gpu_access
 #SBATCH --gres=gpu:1
-#SBATCH --time=3:00:00
+#SBATCH --time=8:00:00
 #SBATCH --mail-type=begin,end,fail
 #SBATCH --mail-user=sjshen@email.unc.edu
 
@@ -17,8 +17,8 @@ cd $SLURM_SUBMIT_DIR
 
 mkdir -p logs
 
-echo "Starting White Noise Ablation Study"
+echo "Starting Patch10_4 Ablation Study"
 
-./env/bin/python ablation/train_model.py ablation/rnn_args_wnoise.yaml
+./env/bin/python ablation/train_model.py ablation/rnn_args_patch10_4.yaml
 
 echo "Job Complete."
