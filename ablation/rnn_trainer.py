@@ -679,6 +679,14 @@ class BrainToTextDecoder_Trainer:
                 val_PERs.append(val_metrics["avg_PER"])
                 val_losses.append(val_metrics["avg_loss"])
                 val_results.append(val_metrics)
+                
+                csv_path = os.path.join(self.args["output_dir"], "training_metrics.csv")
+                file_exists = os.path.isfile(csv_path)
+                
+                with open(csv_path, "a") as f:
+                    if not file_exists:
+                        f.write("batch,training_loss,validation_loss,validation_per\n")
+                    f.write(f"{i},{loss.detach().item()},{val_metrics['avg_loss']},{val_metrics['avg_PER']}\n")
 
                 # Determine if new best day. Based on if PER is lower, or in the case of a PER tie, if loss is lower
                 new_best = False
