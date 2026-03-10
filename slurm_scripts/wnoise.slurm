@@ -1,7 +1,7 @@
 #!/bin/bash
-#SBATCH --job-name=noaug_2
-#SBATCH --output=logs/noaug_2.out
-#SBATCH --error=logs/noaug_2.err
+#SBATCH --job-name=wnoise_1
+#SBATCH --output=logs/wnoise_1.out
+#SBATCH --error=logs/wnoise_1.err
 #SBATCH -N 1
 #SBATCH -n 1
 #SBATCH --cpus-per-task=8
@@ -17,8 +17,8 @@ cd $SLURM_SUBMIT_DIR
 
 mkdir -p logs
 
-echo "Starting No Augmentation Ablation Study"
+echo "Starting White Noise Ablation Study"
 
-./env/bin/python ablation/train_model.py ablation/rnn_args_noaug.yaml
+./env/bin/python ablation/train_model.py ablation/rnn_args_wnoise.yaml
 
 echo "Job Complete."

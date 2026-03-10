@@ -6,7 +6,8 @@ model:
   n_layers: 5 # number of GRU layers
   patch_size: 25 # size of the input patches (25 time steps)
   patch_stride: 4 # stride for the input patches (4 time steps)
-
+  pad_remainder: false # whether to pad the remainder of the sequence that doesn't fit into a full patch
+  
   input_network:
     n_input_layers: 1 # number of input layers per network (one network for each day)
     input_layer_sizes:
@@ -20,7 +21,7 @@ use_amp: true # whether to use automatic mixed precision (AMP) for training
 
 output_dir: ablation/trained_models/patch25_4 # directory to save the trained model and logs
 checkpoint_dir: ablation/trained_models/patch25_4/checkpoint # directory to save checkpoints during training
-init_from_checkpoint: false # whether to initialize the model from a checkpoint
+init_from_checkpoint: true # whether to initialize the model from a checkpoint
 init_checkpoint_path: ablation/trained_models/patch25_4/checkpoint/best_checkpoint # path to the checkpoint to initialize the model from, if any
 save_best_checkpoint: true # whether to save the best checkpoint based on validation metrics
 save_all_val_steps: false # whether to save checkpoints at all validation steps
