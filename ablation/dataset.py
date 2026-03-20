@@ -388,6 +388,16 @@ def train_test_split_indicies(
             continue
 
         else:
+            if num_trials == 0:
+                train_trials[day] = {
+                    "trials": [],
+                    "session_path": trials_per_day[day]["session_path"],
+                }
+                test_trials[day] = {
+                    "trials": [],
+                    "session_path": trials_per_day[day]["session_path"],
+                }
+                continue
             # Calculate how many trials to use for testing
             num_test = max(1, int(num_trials * test_percentage))
 
