@@ -1,8 +1,10 @@
+from importlib.resources import path
 import math
 import os
 
 import h5py
 import numpy as np
+from requests import session
 import torch
 from torch.nn.utils.rnn import pad_sequence
 from torch.utils.data import Dataset
@@ -344,7 +346,8 @@ def train_test_split_indicies(
                         continue
 
                     good_trial_indices.append(t)
-
+        # Inside the first for loop
+        print(f"Checking session: {session} | Path: {path} | Trials found: {len(good_trial_indices)}")
         trials_per_day[i] = {
             "num_trials": len(good_trial_indices),
             "trial_indices": good_trial_indices,
