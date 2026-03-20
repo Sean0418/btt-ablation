@@ -10,4 +10,8 @@ if __name__ == "__main__":
     args = OmegaConf.load(config_file)
     
     trainer = BrainToTextDecoder_Trainer(args)
-    metrics = trainer.train()
+    
+    if args["mode"] == "train":
+        metrics = trainer.train()
+    elif args["mode"] == "test":
+        metrics = trainer.evaluate_test_set()

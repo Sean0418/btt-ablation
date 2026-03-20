@@ -17,6 +17,7 @@ from omegaconf import OmegaConf
 from rnn_model import GRUDecoder
 from torch.optim.lr_scheduler import LambdaLR
 from torch.utils.data import DataLoader
+from torch.utils.data import random_split
 
 # Get the directory of this file (baseline/)
 script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -243,13 +244,35 @@ class BrainToTextDecoder_Trainer:
             random_seed=self.args["dataset"]["seed"],
             feature_subset=feature_subset,
         )
+        
+        total_val_samples = len(self.val_dataset)
+        new_val_size = total_val_samples // 2
+        test_size = total_val_samples - new_val_size
+
+        pure_val_dataset, blind_test_dataset = random_split(
+            dataset=self.val_dataset,
+            lengths=[new_val_size, test_size],
+            generator=torch.Generator().manual_seed(42)
+        )
+        
+        # Use pure_val_dataset for validation during training, and keep blind_test_dataset separate for a final evaluation after training is complete
         self.val_loader = DataLoader(
-            self.val_dataset,
+            pure_val_dataset,
             batch_size=None,  # Dataset.__getitem__() already returns batches
             shuffle=False,
             num_workers=0,
             pin_memory=True,
         )
+        
+        # Create the brand new locked test loader
+        self.test_loader = DataLoader(
+            blind_test_dataset,
+            batch_size=None,
+            shuffle=False,
+            num_workers=0,
+            pin_memory=True,
+        )
+        
 
         self.logger.info("Successfully initialized datasets")
 
@@ -895,3 +918,25 @@ class BrainToTextDecoder_Trainer:
         metrics["avg_loss"] = np.mean(metrics["losses"])
 
         return metrics
+    
+    def evaluate_test_set(self):
+        self.logger.info("Test mode. Loading weights.")
+        
+        if self.args["init_checkpoint_path"] != "None":
+            self.load_model_checkpoint(self.args["init_checkpoint_path"])
+        else:
+            self.logger.error("You must provide a checkpoint path.")
+            return
+            
+        self.model.eval()
+        self.logger.info("Initiating evaluation on pure blind test set.")
+        
+        test_metrics = self.validation(
+            loader=self.test_loader,
+            return_logits=False,
+            return_data=False,
+        )
+        
+        self.logger.info(f"Test Phoneme Error Rate: {test_metrics['avg_PER']:.5f}")
+        
+        return test_metrics
