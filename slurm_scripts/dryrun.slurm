@@ -18,9 +18,9 @@ cd $SLURM_SUBMIT_DIR
 mkdir -p logs
 
 echo "Starting Dryrun Phase One: Training"
-./env/bin/python ablation/train_model.py ablation/dryrun_train.yaml
+./env/bin/python ablation/train_model.py ablation/rnn_args_dryrun_train.yaml
 
 echo "Starting Dryrun Phase Two: Testing"
-./env/bin/python ablation/train_model.py ablation/dryrun_test.yaml
+./env/bin/python ablation/train_model.py ablation/rnn_args_dryrun_test.yaml
 
 echo "Job Complete."
