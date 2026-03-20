@@ -193,9 +193,9 @@ class BrainToTextDecoder_Trainer:
             seed=self.args["dataset"]["seed"],
             bad_trials_dict=None,
         )
-        _, val_trials = train_test_split_indicies(
+        val_trials, test_trials = train_test_split_indicies(
             file_paths=val_file_paths,
-            test_percentage=1,
+            test_percentage=0.5,
             seed=self.args["dataset"]["seed"],
             bad_trials_dict=None,
         )
@@ -245,19 +245,20 @@ class BrainToTextDecoder_Trainer:
             feature_subset=feature_subset,
         )
         
-        total_val_samples = len(self.val_dataset)
-        new_val_size = total_val_samples // 2
-        test_size = total_val_samples - new_val_size
-
-        pure_val_dataset, blind_test_dataset = random_split(
-            dataset=self.val_dataset,
-            lengths=[new_val_size, test_size],
-            generator=torch.Generator().manual_seed(42)
+        self.test_dataset = BrainToTextDataset(
+            trial_indicies=test_trials,
+            split="test",
+            days_per_batch=None,
+            n_batches=None,
+            batch_size=self.args["dataset"]["batch_size"],
+            must_include_days=None,
+            random_seed=self.args["dataset"]["seed"],
+            feature_subset=feature_subset,
         )
         
         # Use pure_val_dataset for validation during training, and keep blind_test_dataset separate for a final evaluation after training is complete
         self.val_loader = DataLoader(
-            pure_val_dataset,
+            self.val_dataset,
             batch_size=None,  # Dataset.__getitem__() already returns batches
             shuffle=False,
             num_workers=0,
@@ -266,7 +267,7 @@ class BrainToTextDecoder_Trainer:
         
         # Create the brand new locked test loader
         self.test_loader = DataLoader(
-            blind_test_dataset,
+            self.test_dataset,
             batch_size=None,
             shuffle=False,
             num_workers=0,

@@ -9,7 +9,7 @@
 #SBATCH --partition=volta-gpu
 #SBATCH --qos=gpu_access
 #SBATCH --gres=gpu:1
-#SBATCH --time=5:00:00
+#SBATCH --time=1:00:00
 #SBATCH --mail-type=begin,end,fail
 #SBATCH --mail-user=sjshen@email.unc.edu
 
