@@ -4,7 +4,7 @@ model:
   rnn_dropout: 0.4 # dropout rate for the GRU layers
   rnn_trainable: true # whether the GRU layers are trainable
   n_layers: 5 # number of GRU layers
-  patch_size: 25 # size of the input patches (25 time steps)
+  patch_size: 22 # size of the input patches (22 time steps)
   patch_stride: 4 # stride for the input patches (4 time steps)
   pad_remainder: false # whether to pad the remainder of the sequence that doesn't fit into a full patch
   
