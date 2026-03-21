@@ -190,13 +190,13 @@ class BrainToTextDecoder_Trainer:
         train_trials, _ = train_test_split_indicies(
             file_paths=train_file_paths,
             test_percentage=0,
-            seed=self.args["dataset"]["seed"],
+            seed=1, #self.args["dataset"]["seed"],
             bad_trials_dict=None,
         )
         val_trials, test_trials = train_test_split_indicies(
             file_paths=val_file_paths,
             test_percentage=0.5,
-            seed=self.args["dataset"]["seed"],
+            seed=1,
             bad_trials_dict=None,
         )
 

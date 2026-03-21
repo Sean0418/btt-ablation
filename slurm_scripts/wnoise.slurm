@@ -1,7 +1,7 @@
 #!/bin/bash
-#SBATCH --job-name=wnoise_1
-#SBATCH --output=logs/wnoise_1.out
-#SBATCH --error=logs/wnoise_1.err
+#SBATCH --job-name=wnoise_2
+#SBATCH --output=logs/wnoise_2.out
+#SBATCH --error=logs/wnoise_2.err
 #SBATCH -N 1
 #SBATCH -n 1
 #SBATCH --cpus-per-task=8

@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=patch14_4
-#SBATCH --output=logs/patch14_4_1.out
-#SBATCH --error=logs/patch14_4_1.err
+#SBATCH --output=logs/patch14_4_2.out
+#SBATCH --error=logs/patch14_4_2.err
 #SBATCH -N 1
 #SBATCH -n 1
 #SBATCH --cpus-per-task=8
@@ -9,7 +9,7 @@
 #SBATCH --partition=volta-gpu
 #SBATCH --qos=gpu_access
 #SBATCH --gres=gpu:1
-#SBATCH --time=10:00:00
+#SBATCH --time=5:00:00
 #SBATCH --mail-type=begin,end,fail
 #SBATCH --mail-user=sjshen@email.unc.edu
 
