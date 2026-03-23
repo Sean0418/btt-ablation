@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --job-name=patch14_3
-#SBATCH --output=logs/patch14_3_1.out
+#SBATCH --output=logs/patch14_3_2.out
 #SBATCH --error=logs/patch14_3_2.err
 #SBATCH -N 1
 #SBATCH -n 1
