@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=nodropout
-#SBATCH --output=logs/nodropout_4.out
-#SBATCH --error=logs/nodropout_4.err
+#SBATCH --output=logs/nodropout_4_1.out
+#SBATCH --error=logs/nodropout_4_1.err
 #SBATCH -N 1
 #SBATCH -n 1
 #SBATCH --cpus-per-task=8
@@ -9,7 +9,7 @@
 #SBATCH --partition=volta-gpu
 #SBATCH --qos=gpu_access
 #SBATCH --gres=gpu:1
-#SBATCH --time=4:00:00
+#SBATCH --time=10:00:00
 
 cd $SLURM_SUBMIT_DIR
 

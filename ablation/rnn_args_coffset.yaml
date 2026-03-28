@@ -1,32 +1,33 @@
 model:
   n_input_features: 512 # number of input features in the neural data. (2 features per electrode, 256 electrodes)
   n_units: 768 # number of units per GRU layer
-  rnn_dropout: 0 # dropout rate for the GRU layers
+  rnn_dropout: 0.4 # dropout rate for the GRU layers
   rnn_trainable: true # whether the GRU layers are trainable
   n_layers: 5 # number of GRU layers
   patch_size: 14 # size of the input patches (14 time steps)
   patch_stride: 4 # stride for the input patches (4 time steps)
+  pad_remainder: false # whether to pad the remainder of the sequence that doesn't fit into a full patch
 
   input_network:
     n_input_layers: 1 # number of input layers per network (one network for each day)
     input_layer_sizes:
     - 512 # size of the input layer (number of input features)
     input_trainable: true # whether the input layer is trainable
-    input_layer_dropout: 0 # dropout rate for the input layer
+    input_layer_dropout: 0.2 # dropout rate for the input layer
 
 gpu_number: '1' # GPU number to use for training, formatted as a string (e.g., '0', '1', etc.)
 mode: train
 use_amp: true # whether to use automatic mixed precision (AMP) for training
 
-output_dir: ablation/trained_models/nodropout # directory to save the trained model and logs
-checkpoint_dir: ablation/trained_models/nodropout/checkpoint # directory to save checkpoints during training
+output_dir: ablation/trained_models/coffset # directory to save the trained model and logs
+checkpoint_dir: ablation/trained_models/coffset/checkpoint # directory to save checkpoints during training
 init_from_checkpoint: false # whether to initialize the model from a checkpoint
-init_checkpoint_path: ablation/trained_models/nodropout/checkpoint/best_checkpoint # path to the checkpoint to initialize the model from, if any
+init_checkpoint_path: ablation/trained_models/coffset/checkpoint/best_checkpoint # path to the checkpoint to initialize the model from, if any
 save_best_checkpoint: true # whether to save the best checkpoint based on validation metrics
 save_all_val_steps: false # whether to save checkpoints at all validation steps
 save_final_model: false # whether to save the final model after training
 save_val_metrics: true # whether to save validation metrics during training
-early_stopping: true # whether to use early stopping based on validation metrics
+early_stopping: false # whether to use early stopping based on validation metrics
 early_stopping_val_steps: 20 # number of validation steps to wait before stopping training if no improvement is seen
 
 num_training_batches: 120000 # number of training batches to run
@@ -59,14 +60,14 @@ save_val_data: false # whether to save validation data
 
 dataset:
   data_transforms:
-    white_noise_std: 1.0 # standard deviation of the white noise added to the data
+    white_noise_std: 0.0 # standard deviation of the white noise added to the data
     constant_offset_std: 0.2 # standard deviation of the constant offset added to the data
     random_walk_std: 0.0 # standard deviation of the random walk added to the data
     random_walk_axis: -1 # axis along which the random walk is applied
     static_gain_std: 0.0 # standard deviation of the static gain applied to the data
-    random_cut: 3 # number of time steps to randomly cut from the beginning of each batch of trials
+    random_cut: 0 # number of time steps to randomly cut from the beginning of each batch of trials
     smooth_kernel_size: 100 # size of the smoothing kernel applied to the data
-    smooth_data: true # whether to smooth the data
+    smooth_data: false # whether to smooth the data
     smooth_kernel_std: 2 # standard deviation of the smoothing kernel applied to the data
 
   neural_dim: 512 # dimensionality of the neural data

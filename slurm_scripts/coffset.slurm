@@ -1,7 +1,7 @@
 #!/bin/bash
-#SBATCH --job-name=patch2_1
-#SBATCH --output=logs/patch2_1_2.out
-#SBATCH --error=logs/patch2_1_2.err
+#SBATCH --job-name=coffset_1
+#SBATCH --output=logs/coffset_1.out
+#SBATCH --error=logs/coffset_1.err
 #SBATCH -N 1
 #SBATCH -n 1
 #SBATCH --cpus-per-task=8
@@ -17,8 +17,8 @@ cd $SLURM_SUBMIT_DIR
 
 mkdir -p logs
 
-echo "Starting Patch2_1 Ablation Study"
+echo "Starting Constant Offset Ablation Study"
 
-./env/bin/python ablation/train_model.py ablation/rnn_args_patch2_1.yaml
+./env/bin/python ablation/train_model.py ablation/rnn_args_coffset.yaml
 
 echo "Job Complete."
