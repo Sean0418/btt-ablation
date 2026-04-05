@@ -1,7 +1,7 @@
 #!/bin/bash
-#SBATCH --job-name=2layer
-#SBATCH --output=logs/2layer_1.out
-#SBATCH --error=logs/2layer_1.err
+#SBATCH --job-name=512units
+#SBATCH --output=logs/512units_1.out
+#SBATCH --error=logs/512units_1.err
 #SBATCH -N 1
 #SBATCH -n 1
 #SBATCH --cpus-per-task=8
@@ -15,8 +15,8 @@ cd $SLURM_SUBMIT_DIR
 
 mkdir -p logs
 
-echo "Starting 2Layer Ablation Study"
+echo "Starting 512Units Ablation Study"
 
-./env/bin/python ablation/train_model.py ablation/rnn_args_2layers.yaml
+./env/bin/python ablation/train_model.py ablation/rnn_args_512units.yaml
 
-echo "Job Complete."
+echo "Job Complete." 
