@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=1layer
-#SBATCH --output=logs/1layer_1.out
-#SBATCH --error=logs/1layer_1.err
+#SBATCH --output=logs/1layer_2.out
+#SBATCH --error=logs/1layer_2.err
 #SBATCH -N 1
 #SBATCH -n 1
 #SBATCH --cpus-per-task=8

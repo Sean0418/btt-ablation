@@ -1,7 +1,7 @@
 #!/bin/bash
-#SBATCH --job-name=wnoise_2
-#SBATCH --output=logs/wnoise_2.out
-#SBATCH --error=logs/wnoise_2.err
+#SBATCH --job-name=wnoise_3
+#SBATCH --output=logs/wnoise_3.out
+#SBATCH --error=logs/wnoise_3.err
 #SBATCH -N 1
 #SBATCH -n 1
 #SBATCH --cpus-per-task=8
@@ -9,7 +9,7 @@
 #SBATCH --partition=volta-gpu
 #SBATCH --qos=gpu_access
 #SBATCH --gres=gpu:1
-#SBATCH --time=5:00:00
+#SBATCH --time=10:00:00
 #SBATCH --mail-type=begin,end,fail
 #SBATCH --mail-user=sjshen@email.unc.edu
 

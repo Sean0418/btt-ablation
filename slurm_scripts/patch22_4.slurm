@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=patch22_4
-#SBATCH --output=logs/patch22_4_1.out
-#SBATCH --error=logs/patch22_4_1.err
+#SBATCH --output=logs/patch22_4_2.out
+#SBATCH --error=logs/patch22_4_2.err
 #SBATCH -N 1
 #SBATCH -n 1
 #SBATCH --cpus-per-task=8
