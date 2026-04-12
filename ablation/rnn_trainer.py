@@ -971,28 +971,39 @@ class BrainToTextDecoder_Trainer:
                     # 2. Get Ground Truth IDs
                     true_ids = labels[b_idx, 0:phone_seq_lens[b_idx]].cpu().numpy().tolist()
                     
-                    # 3. Calculate total edit distance for final PER
-                    total_edit_dist += F.edit_distance(pred_ids, true_ids)
+                    # 3. Calculate Trial PER and Add to Totals
+                    trial_edit_dist = F.edit_distance(pred_ids, true_ids)
+                    total_edit_dist += trial_edit_dist
                     total_phonemes += len(true_ids)
+                    
+                    # Protect against division by zero just in case
+                    trial_per = (trial_edit_dist / len(true_ids)) * 100 if len(true_ids) > 0 else 0.0
 
                     # 4. Extract metadata from the dataloader batch
                     session_name = self.args['dataset']['sessions'][day_indicies[b_idx].item()]
                     block_num = batch["block_nums"][b_idx].item()
                     trial_num = batch["trial_nums"][b_idx].item()
-
-                    # Extract the tensor and convert it back to a readable string
-                    tensor_ints = batch["transcriptions"][b_idx].cpu().numpy()
-                    sentence_label = "".join([chr(int(c)) for c in tensor_ints if int(c) != 0])
+                    
+                    # Handle the transcription format from ASCII Tensor to string
+                    sentence_label = batch["transcriptions"][b_idx]
+                    if isinstance(sentence_label, torch.Tensor):
+                        sentence_label = "".join([chr(int(c)) for c in sentence_label if int(c) != 0])
+                    elif isinstance(sentence_label, (list, tuple)):
+                        try:
+                            sentence_label = "".join([chr(int(c)) for c in sentence_label if int(c) != 0])
+                        except TypeError:
+                            sentence_label = "".join([str(s) for s in sentence_label])
 
                     # 5. Format using your local LOGIT_TO_PHONEME dictionary
                     pred_seq = [LOGIT_TO_PHONEME[p] for p in pred_ids]
                     true_seq_text = [LOGIT_TO_PHONEME[p] for p in true_ids]
                     
-                    # 6. Log exact structure from the image using self.logger
+                    # 6. Log exact structure with the new Trial PER line
                     self.logger.info(f"Session: {session_name}, Block: {block_num}, Trial: {trial_num}")
                     self.logger.info(f"Sentence label:     {sentence_label}")
                     self.logger.info(f"True sequence:      {' '.join(true_seq_text)}")
-                    self.logger.info(f"Predicted Sequence: {' '.join(pred_seq)}\n")
+                    self.logger.info(f"Predicted Sequence: {' '.join(pred_seq)}")
+                    self.logger.info(f"Phoneme Error rate: {trial_per:.2f}%\n")
 
         # Calculate and print final metrics
         final_test_per = (total_edit_dist / total_phonemes) * 100
