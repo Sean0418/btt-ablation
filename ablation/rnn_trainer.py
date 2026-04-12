@@ -920,8 +920,11 @@ class BrainToTextDecoder_Trainer:
 
         return metrics
     
-    def evaluate_test_set(self):
+def evaluate_test_set(self):
         self.logger.info("Test mode. Loading weights.")
+        
+        # Mapping dictionary for phoneme strings
+        PHONEMES = ['del', 'sil', 'a', 'ae', 'ah', 'ao', 'aw', 'ax', 'ay', 'b', 'ch', 'd', 'dh', 'eh', 'er', 'ey', 'f', 'g', 'h', 'ih', 'iy', 'jh', 'k', 'l', 'm', 'n', 'ng', 'ow', 'oy', 'p', 'r', 's', 'sh', 't', 'th', 'uh', 'uw', 'v', 'w', 'y', 'z', 'zh']
         
         if self.args["init_checkpoint_path"] != "None":
             self.load_model_checkpoint(self.args["init_checkpoint_path"])
@@ -932,12 +935,51 @@ class BrainToTextDecoder_Trainer:
         self.model.eval()
         self.logger.info("Initiating evaluation on pure blind test set.")
         
-        test_metrics = self.validation(
-            loader=self.test_loader,
-            return_logits=False,
-            return_data=False,
-        )
+        total_edit_dist = 0
+        total_phonemes = 0
+
+        for i, batch in enumerate(self.test_loader):
+            features = batch["input_features"].to(self.device)
+            labels = batch["seq_class_ids"].to(self.device)
+            n_time_steps = batch["n_time_steps"].to(self.device)
+            phone_seq_lens = batch["phone_seq_lens"].to(self.device)
+            day_indicies = batch["day_indicies"].to(self.device)
+
+            with torch.no_grad():
+                with torch.autocast(device_type="cuda", enabled=self.args["use_amp"], dtype=torch.bfloat16):
+                    features, n_time_steps = self.transform_data(features, n_time_steps, "val")
+                    
+                    adjusted_lens = ((n_time_steps - self.args["model"]["patch_size"]) / self.args["model"]["patch_stride"] + 1).to(torch.int32)
+                    logits = self.model(features, day_indicies)
+
+                # Process every trial in the batch
+                for b_idx in range(logits.shape[0]):
+                    # 1. Get raw prediction and collapse CTC repeats/blanks
+                    raw_pred = torch.argmax(logits[b_idx, 0:adjusted_lens[b_idx], :], dim=-1)
+                    collapsed_pred = torch.unique_consecutive(raw_pred, dim=-1)
+                    pred_ids = [p.item() for p in collapsed_pred if p.item() != 0]
+                    
+                    # 2. Get Ground Truth IDs
+                    true_ids = labels[b_idx, 0:phone_seq_lens[b_idx]].cpu().numpy().tolist()
+                    
+                    # 3. Calculate Trial PER
+                    edit_dist = F.edit_distance(pred_ids, true_ids)
+                    trial_per = (edit_dist / len(true_ids)) * 100
+                    
+                    total_edit_dist += edit_dist
+                    total_phonemes += len(true_ids)
+
+                    # 4. Convert to strings for the log
+                    pred_str = " ".join([PHONEMES[p] for p in pred_ids])
+                    true_str = " ".join([PHONEMES[p] for p in true_ids])
+                    
+                    # 5. Print to Slurm log
+                    self.logger.info(f"Trial {batch['trial_nums'][b_idx]}:")
+                    self.logger.info(f"  True: {true_str}")
+                    self.logger.info(f"  Pred: {pred_str}")
+                    self.logger.info(f"  PER:  {trial_per:.2f}%")
+
+        final_test_per = total_edit_dist / total_phonemes
+        self.logger.info(f"--- FINAL BLIND TEST PER: {final_test_per:.5f} ---")
         
-        self.logger.info(f"Test Phoneme Error Rate: {test_metrics['avg_PER']:.5f}")
-        
-        return test_metrics
+        return {"avg_PER": final_test_per}
