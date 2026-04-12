@@ -979,11 +979,10 @@ class BrainToTextDecoder_Trainer:
                     session_name = self.args['dataset']['sessions'][day_indicies[b_idx].item()]
                     block_num = batch["block_nums"][b_idx].item()
                     trial_num = batch["trial_nums"][b_idx].item()
-                    
-                    # Handle the transcription format
-                    sentence_label = batch["transcriptions"][b_idx]
-                    if not isinstance(sentence_label, str):
-                         sentence_label = "".join(sentence_label)
+
+                    # Extract the tensor and convert it back to a readable string
+                    tensor_ints = batch["transcriptions"][b_idx].cpu().numpy()
+                    sentence_label = "".join([chr(int(c)) for c in tensor_ints if int(c) != 0])
 
                     # 5. Format using your local LOGIT_TO_PHONEME dictionary
                     pred_seq = [LOGIT_TO_PHONEME[p] for p in pred_ids]
