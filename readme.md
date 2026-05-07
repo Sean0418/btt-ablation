@@ -11,7 +11,7 @@ This project systematically investigates the architectural components of an intr
 
 ### Project Documents
 To understand the full theoretical background and the systematic ablation studies conducted in this project, please refer to the documents below:
-* [![View Essay](https://img.shields.io/badge/Thesis-PDF-red?style=for-the-badge)](https://github.com/sj-shen/btt-attention/blob/main/documents/Sean-Shen-Masters-Essay.pdf)
+* | **Master's Essay** | PDF | [View Essay](./documents/Sean-Shen-Masters-Essay.pdf) |
 * [![View Defense Slides](https://img.shields.io/badge/Defense_Slides-PPT-orange?style=for-the-badge&logo=microsoft-powerpoint&logoColor=white)](https://github.com/sj-shen/btt-attention/blob/main/documents/Defense-Presentation.pdf)
 
 ## Setup and Reproducibility
