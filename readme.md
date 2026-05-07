@@ -1,38 +1,53 @@
-# Brain-to-Text Project
+# Analysis of Architectural Design Choices for Brain-to-Text Decoding
 
-## Prerequisites
+This repository contains the code and the documents for my Master's essay.
 
-* **Git:** Install **Git Bash** for Windows from [git-scm.com](https://git-scm.com/).
-* **Conda:** Anaconda or Miniconda.
+This project systematically investigates the architectural components of an intracortical speech decoding pipeline, focusing on the optimization of a recurrent neural network (RNN) backbone. By performing extensive ablation studies, this research evaluates the impact of model depth, width, and temporal processing on decoding performance.
 
----
 
-## Installation
+### Key Results
+* **Phoneme Error Rate (PER):** 9.68%
+* **Identification:** Determined that temporal compression (patching and striding) is the most critical pipeline component, reducing error rate by 11.5%
 
-1. **Clone the Repo**
+### Project Documents
+* [Master's Essay (PDF)](./documents/Sean-Shen-Masters-Essay.pdf)
+* [Defense Presentation (PDF)](./documents/Defense-Presentation.pdf)
 
-    ```bash
-    git clone https://github.com/Sean0418/brain-to-text-project
-    cd brain-to-text-project
-    ```
 
-2. **One-Time Fix for Git Bash on Windows**
-    * Open **Anaconda Prompt** and run `conda init bash`.
-    * Restart all your terminals.
+## Setup and Reproducibility
+This project was developed on the UNC Longleaf cluster using NVIDIA Volta GPUs.
 
-3. **Run the Setup Script**
-    * In a new Git Bash terminal, run the following:
 
-    ```bash
-    chmod +x setup.sh
-    ./setup.sh
-    ```
+### Computational Environment
+* **OS**: Linux (HPC Cluster Environment)
+* **Hardware**: NVIDIA Volta GPU (V100 or equivalent), 8-core CPU, 16GB+ System RAM
+* **Scheduler**: SLURM
 
-    This creates a local environment in `./env` and installs all packages. This step will take a few minutes.
+### Environment
+* **Python:** 3.10
+* **Frameworks:** PyTorch, Pandas, Scikit-learn
+* **Compute:** NVIDIA GPU with 8+ GB VRAM recommended 
 
----
+### Installation on Longleaf
 
-## Usage
+This project is configured for a Linux-based HPC environment using the Slurm workload manager. 
+
+1. **Clone the repository** to your work directory on the cluster.
+   ```bash
+   git clone https://github.com/Sean0418/btt-ablation
+   cd btt-attention
+   ```
+2. **Submit the installation job from the root directory**: 
+   ```bash
+   sbatch install_env.slurm
+   ```
+
+3. **Sample output log for successful installation**: 
+    * [install_log.txt](./documents/install_log.txt)
+
+
+
+### Usage
 
 1. **Activate the Environment**
 
@@ -46,17 +61,51 @@
     conda deactivate
     ```
 
-## Load Data
-
+### Load Data
 Navigate to the [NEJM Data Github](https://github.com/Neuroprosthetics-Lab/nejm-brain-to-text/tree/main/data) to find instructions for downloading the correct dataset.
 
+The data directory should appear as follows: 
+
+data/
+├── hdf5_data_final/       <-- Processed HDF5 neural features
+├── sampled_dataset/       <-- Sampled trial data for training
+├── doi_10_5061_.../       <-- Raw repository data
+└── t15_copyTaskData_description.csv
+
+### Pre-trained Model & Weights
+The final trained weights are hosted on Zenodo. To use them, you must manually create the `checkpoint` directory in the project root.
+
+1. **Download the files** from [Zenodo](https://doi.org/10.5281/zenodo.20060036).
+
+Your trained_models directory should be arranged as follows after downloading the weights: 
+
+ablation/
+├── trained_models/
+│   └── final/
+│       ├── checkpoint/
+│       │   ├── args.yaml          <-- Model hyperparameters
+│       │   ├── best_checkpoint    <-- Pre-trained weights (~897MB)
+│       │   └── val_metrics.pkl    <-- Validation performance logs
+│       ├── train_val_trials.json
+│       ├── training_log
+│       └── training_metrics.csv
+└── data_augmentations.py
 
 
-```bash
-sbatch -p volta-gpu baseline_wer_eval.sh
+Your root directory structure should appear as follows after setup:
 
-# If using volta-gpu
-cd /work/users/s/j/sjshen/brain-to-text-project
-# Patch both the main script and the helper script
-sed -i 's/bfloat16/float16/g' baseline/evaluate_model.py baseline/evaluate_model_helpers.py
-```
+.
+├── ablation/
+│   ├── trained_models/      <-- Pre-trained checkpoints
+│   └── data_augmentations.py
+├── baseline/                <-- Baseline model configurations
+├── data/                    <-- Neural datasets and CSV descriptions
+├── documents/               <-- Master's Essay and Presentation PDFs
+├── install_env.slurm        <-- Slurm submission script
+├── setup.sh                 <-- Environment setup script
+└── README.md
+
+## Credits
+This project builds upon the brain-to-text decoding framework developed by **Card et al. (2024)**.
+* **Original Architecture**: Based on the research in *"An Accurate and Rapidly Calibrating Speech Neuroprosthesis"* [Original Github](https://github.com/Neuroprosthetics-Lab/nejm-brain-to-text)
+* **Research Goal**: This repository contains the systematic ablation studies and architectural optimizations (specifically regarding temporal compression and GRU scaling) detailed in my Master's essay
