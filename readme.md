@@ -66,11 +66,13 @@ Navigate to the [NEJM Data Github](https://github.com/Neuroprosthetics-Lab/nejm-
 
 The data directory should appear as follows: 
 
+```
 data/
 ├── hdf5_data_final/       <-- Processed HDF5 neural features
 ├── sampled_dataset/       <-- Sampled trial data for training
 ├── doi_10_5061_.../       <-- Raw repository data
 └── t15_copyTaskData_description.csv
+```
 
 ### Pre-trained Model & Weights
 The final trained weights are hosted on Zenodo. To use them, you must manually create the `checkpoint` directory in the project root.
@@ -79,6 +81,7 @@ The final trained weights are hosted on Zenodo. To use them, you must manually c
 
 Your trained_models directory should be arranged as follows after downloading the weights: 
 
+```
 ablation/
 ├── trained_models/
 │   └── final/
@@ -90,10 +93,11 @@ ablation/
 │       ├── training_log
 │       └── training_metrics.csv
 └── data_augmentations.py
-
+```
 
 Your root directory structure should appear as follows after setup:
 
+```
 .
 ├── ablation/
 │   ├── trained_models/      <-- Pre-trained checkpoints
@@ -104,8 +108,9 @@ Your root directory structure should appear as follows after setup:
 ├── install_env.slurm        <-- Slurm submission script
 ├── setup.sh                 <-- Environment setup script
 └── README.md
+```
 
 ## Credits
 This project builds upon the brain-to-text decoding framework developed by **Card et al. (2024)**.
-* **Original Architecture**: Based on the research in *"An Accurate and Rapidly Calibrating Speech Neuroprosthesis"* [Original Github](https://github.com/Neuroprosthetics-Lab/nejm-brain-to-text)
+* **Original Architecture**: Based on the research in *"An Accurate and Rapidly Calibrating Speech Neuroprosthesis"* [Original GitHub Repository](https://github.com/Neuroprosthetics-Lab/nejm-brain-to-text)
 * **Research Goal**: This repository contains the systematic ablation studies and architectural optimizations (specifically regarding temporal compression and GRU scaling) detailed in my Master's essay
