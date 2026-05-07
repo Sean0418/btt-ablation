@@ -11,7 +11,6 @@ This project systematically investigates the architectural components of an intr
 
 ### Project Documents
 To understand the full theoretical background and the systematic ablation studies conducted in this project, please refer to the documents below:
-* **Master's Essay**: [View Essay](https://drive.google.com/file/d/1-Ru8DWrHMcM1AaeBZ0eQDpViN0vJi3TG/view?usp=sharing)
 
 * **Defense Slides**: [View Defense Slides](https://drive.google.com/file/d/1tM3sqrhL0X9y46M96j9AMjvXKfDmaWB7/view?usp=sharing)
 
