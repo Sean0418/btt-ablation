@@ -10,9 +10,9 @@ This project systematically investigates the architectural components of an intr
 * **Identification:** Determined that temporal compression (patching and striding) is the most critical pipeline component, reducing error rate by 11.5%
 
 ### Project Documents
-* [Master's Essay (PDF)](./documents/Sean-Shen-Masters-Essay.pdf)
-* [Defense Presentation (PDF)](./documents/Defense-Presentation.pdf)
-
+To understand the full theoretical background and the systematic ablation studies conducted in this project, please refer to the documents below:
+* [<img src="https://img.shields.io/badge/View_Thesis_PDF-PDF-red?style=for-the-badge&logo=adobe-acrobat-reader&logoColor=white">](https://github.com/sj-shen/btt-attention/blob/main/documents/Sean-Shen-Masters-Essay.pdf)
+* [<img src="https://img.shields.io/badge/View_Defense_Slides-PPT-orange?style=for-the-badge&logo=microsoft-powerpoint&logoColor=white">](https://github.com/sj-shen/btt-attention/blob/main/documents/Defense-Presentation.pdf)
 
 ## Setup and Reproducibility
 This project was developed on the UNC Longleaf cluster using NVIDIA Volta GPUs.
