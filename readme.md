@@ -11,8 +11,8 @@ This project systematically investigates the architectural components of an intr
 
 ### Project Documents
 To understand the full theoretical background and the systematic ablation studies conducted in this project, please refer to the documents below:
-* [<img src="https://img.shields.io/badge/View_Thesis_PDF-PDF-red?style=for-the-badge&logo=adobe-acrobat-reader&logoColor=white">](https://github.com/sj-shen/btt-attention/blob/main/documents/Sean-Shen-Masters-Essay.pdf)
-* [<img src="https://img.shields.io/badge/View_Defense_Slides-PPT-orange?style=for-the-badge&logo=microsoft-powerpoint&logoColor=white">](https://github.com/sj-shen/btt-attention/blob/main/documents/Defense-Presentation.pdf)
+* [![View Essay](https://img.shields.io/badge/Thesis-PDF-red?style=for-the-badge)](https://github.com/sj-shen/btt-attention/blob/main/documents/Sean-Shen-Masters-Essay.pdf)
+* [![View Defense Slides](https://img.shields.io/badge/Defense_Slides-PPT-orange?style=for-the-badge&logo=microsoft-powerpoint&logoColor=white)](https://github.com/sj-shen/btt-attention/blob/main/documents/Defense-Presentation.pdf)
 
 ## Setup and Reproducibility
 This project was developed on the UNC Longleaf cluster using NVIDIA Volta GPUs.
